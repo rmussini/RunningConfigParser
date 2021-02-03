@@ -8,7 +8,7 @@ class RunningConfigParser():
     def __init__(self, file):
         """
         class constructor
-        :param file: running-configuration file path
+        :param file: running-config file path
         """
         self.file = file
         self._full_config = {}
