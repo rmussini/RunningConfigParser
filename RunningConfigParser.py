@@ -25,7 +25,7 @@ class RunningConfigParser():
         Creates a list containing vlan dictionaries. VLAN dictionaries have the following structure:
         {'vlan_id': id, 'vlan_name': name, 'tagged_ports': list of tagged ports, 'untagged_ports': list of untagged
         ports
-        :return: list() of VLAN dictionaries
+        :return: list() of VLAN dictionaries dict()
         """
         #self.parse_vlans()
         return self._vlans
