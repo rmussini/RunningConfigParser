@@ -40,7 +40,7 @@ class RunningConfigParser():
         """
         Create a set() with ports found in line, Ports must be in the STACKID/SLOT/PORT format.
         :param line: line with tagged or untagged ports
-        :return: set() of ports
+        :return: a list() of ports
         """
         ports = set()
         match = re.findall(r'(\d+\/\d\/\d+)', line.lstrip())
