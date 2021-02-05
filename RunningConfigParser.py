@@ -1,22 +1,20 @@
-
 import re
+
 
 class RunningConfigParser():
     """
     Parser for running-config files of ruckus switch stack using FastIron software
     """
+
     def __init__(self, file):
         """
         class constructor
         :param file: running-config file path
         """
         self.file = file
-        self._full_config = {}
-        self._system_info = self.parse_system_info()
-        self._vlans = self.parse_vlans()
-
-
-
+        self.__full_config = {}
+        self.__system_info = self.parse_system_info()
+        self.__vlans = self.parse_vlans()
 
     @property
     def get_vlans(self):
@@ -27,14 +25,21 @@ class RunningConfigParser():
         ports
         :return: list() of VLAN dictionaries dict()
         """
-        #self.parse_vlans()
-        return self._vlans
+        return self.__vlans
+
+    @property
+    def get_system_info(self):
+        """
+        System infos parser, extract hostname, address, gateway and version
+        :return: dict()
+        """
+        return self.__system_info
 
     def get_full_config(self):
-        self._full_config['system'] = self._system_info
-        self._full_config['vlan'] = self.get_vlans
+        self.__full_config['system'] = self.__system_info
+        self.__full_config['vlan'] = self.get_vlans
 
-        return self._full_config
+        return self.__full_config
 
     def get_port_list(self, line):
         """
@@ -49,13 +54,13 @@ class RunningConfigParser():
 
         pools = re.findall(r'(\S+\/\d\/\S+) to (\S+\/\d\/\S+)', line.lstrip())
         for inicio, fim in pools:
-            prefixo = re.findall('^(\d+\/1\/)', inicio)
+            prefixo = re.findall('^(\d+/1/)', inicio)
             inicio = re.findall('\/(\d+)$', inicio)
             fim = re.findall('\/(\d+)$', fim)
             for port in range(int(inicio[0]), int(fim[0]) + 1):
                 ports.add(prefixo[0] + str(port))
 
-        return list(ports)
+        return sorted(list(ports))
 
     def parse_vlans(self):
         """
@@ -90,8 +95,8 @@ class RunningConfigParser():
                             untagged_ports = self.get_port_list(untag)
 
                         tmp_vlans.append({'vlan_id': vlan_id, 'vlan_name': vlan_name, 'tagged_ports': tagged_ports,
-                                       'untagged_ports':
-                            untagged_ports})
+                                          'untagged_ports':
+                                              untagged_ports})
 
                     if line == '':
                         break
@@ -107,13 +112,13 @@ class RunningConfigParser():
                     line = running.readline()
 
                     if line.startswith('ver '):
-                        version = re.match('^ver\s(.*)', line).groups()[0]
+                        version = re.match('^ver (.*)', line).groups()[0]
                     elif line.startswith('hostname '):
-                        hostname = re.match('^hostname\s(.*)', line).groups()[0]
+                        hostname = re.match('^hostname (.*)', line).groups()[0]
                     elif line.startswith('ip address '):
-                        ip_address = re.match('^ip\saddress\s(.*)', line).groups()[0]
+                        ip_address = re.match('^ip address (.*)', line).groups()[0]
                     elif line.startswith('ip default-gateway '):
-                        ip_default_gateway = re.match('^ip\sdefault-gateway\s(.*)', line).groups()[0]
+                        ip_default_gateway = re.match('^ip default-gateway (.*)', line).groups()[0]
 
                     if line == '':
                         break

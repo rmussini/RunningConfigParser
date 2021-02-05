@@ -11,8 +11,11 @@ import pathlib
 #parser.add_argument('filename', type=pathlib.Path,    help = 'running-config file path')
 
 #args = parser.parse_args()
-file = 'abl.teste.stack.run'
+file = '../files/ABA.ST.S01.PU.run'
+conf = RunningConfigParser(file)
+print(conf.get_vlans)
 
+'''
 if os.path.isfile(file):
     sh = RunningConfigParser(file)
     for vlan in sh.get_vlans:
@@ -24,3 +27,4 @@ else:
     print("File {} not found".format(file))
 
 print(sh.parse_system_info())
+'''
